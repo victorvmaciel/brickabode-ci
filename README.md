@@ -88,7 +88,9 @@ It was created two EC2 Amazon Web Services instances to:
 - Provide Nginx;
 
 ![](https://i.ibb.co/FXdtKBR/aws-instances.png)
+
 The instance named **app**, it will serve the application on 5000 por but this one it is exclusively exposed to the another instance named **nginx** trhough the VPC internal network on Amazon Web Services Cloud.
+
 ```
 root@ip-172-31-26-36:/etc/nginx/sites-available# cat brickabode-ci-test.cloudns.ph | grep proxy_redirect
 proxy_redirect		 http://172.31.21.29:5000 http://3.80.71.22;
