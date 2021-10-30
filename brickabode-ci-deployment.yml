@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brickabode-ci-deployment
+spec:
+  template:
+    metadata:
+      name: brickabode-ci
+      labels:
+        app: brickabode-ci
+    spec:
+      containers:
+        - name: a-simple-note-taking-web-app-container
+          image: victorvmaciel/a-simple-note-taking-web-app:latest
+          ports:
+            - containerPort: 5000
+  replicas: 3
+  selector:
+    matchLabels:
+      app: brickabode-ci

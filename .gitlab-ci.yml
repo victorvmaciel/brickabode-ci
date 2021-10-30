@@ -1,0 +1,54 @@
+image: docker:latest
+
+stages:
+  - build
+  - test
+  - deploy
+
+build-docker:
+  stage: build
+  services:
+  - docker:dind
+  retry: 2
+  before_script:
+  - docker info
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+  script:
+  - docker build -t $IMAGE .
+  - docker tag $IMAGE $CI_REGISTRY_USER/$IMAGE
+  - docker push $CI_REGISTRY_USER/$IMAGE
+
+test-project:
+  stage: test
+  image: $CI_REGISTRY_USER/$IMAGE
+  retry: 2  
+  allow_failure:
+    exit_codes:
+     - 137
+  dependencies:
+  - build-docker
+  tags:
+  - test-executor
+  script:
+  - 'docker info'
+  - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD'
+  - 'docker pull $CI_REGISTRY_USER/$IMAGE'
+  # AUTH SNYK
+  - 'docker scan --login  --token $SNYK_TOKEN'
+  - 'docker scan $CI_REGISTRY_USER/$IMAGE || echo ok' 
+
+
+
+deploy-project:  
+  stage: deploy
+  tags:  
+  - deploy-executor
+  script:
+  # purge dangling images
+  - 'docker system prune -f'
+  - 'docker stop $(docker ps -aq)'
+  - 'docker rm $(docker ps -aq)'
+  - 'docker pull $CI_REGISTRY_USER/$IMAGE'
+  # deploy a new one
+  - 'docker run -it -d --name $CONTAINER_NAME -p 5000:5000  $CI_REGISTRY_USER/$IMAGE'
+  - 'echo "page available on brickabode-ci-test.cloudns.ph"'
