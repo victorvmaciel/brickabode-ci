@@ -19,17 +19,12 @@
 ![](https://media-exp1.licdn.com/dms/image/C4E0BAQFhRHi0tefe1g/company-logo_200_200/0/1616162207405?e=2159024400&v=beta&t=-TM6rxWwtyTPSmsjlRpU4t5ctGTZpoaB3BEQWe9dhyU)
 
 
-**Table of Contents**
 
-[TOCM]
-
-[TOC]
-
-##Gitlab CI .yml file
-###stages
+## Gitlab CI .yml file
+### stages
 Each stage is part of a pipeline and do a specifical task. They are **build**, **test** and **deploy**. If some new code is commited and pulled to the main branch, it will automatically activate all steps bellow.
 
-####Build ``build-docker``
+#### Build ``build-docker``
 Build is the first stage on pipeline, it is responsible for build the docker image based on the repository's Dockerfile. It uses a service called docker:dind or "docker in docker" that uses a gilab's docker engine to login on docker hub, build the app image (using the python image as base). it will build a image doing these steps:
  - Pull the docker with the python 3.8 image from dockerhub;
  - Copy all application code from the current repository to the image;
@@ -44,7 +39,7 @@ Build is the first stage on pipeline, it is responsible for build the docker ima
 	REPOSITORY 					TAG                             IMAGE ID  						CREATED       SIZE
 	victorvmaciel/a-simple-note-taking-web-app   latest    b85a78b7a6b0   7 hours ago   957MB
 
-####Test ``test-project``
+#### Test ``test-project``
 
 After build the image and pull to dockerhub, the next stage is to test the docker image integrity  with Snyk, a developer security platform for securing code, dependencies, containers, and infrastructure as code. Snyk it is executed through a shell script using the gitlab-runner.
 
@@ -72,7 +67,7 @@ python:3.8.12-slim-bullseye  37               1 critical, 0 high, 1 medium, 35 l
 python:3.8-slim-buster       70               2 critical, 9 high, 9 medium, 50 low
 ```
 
-####Deploy ``deploy-project``
+#### Deploy ``deploy-project``
 
 The final step will deploy the application on a AWS EC2 Instance using a gilab-runner to execute shell commands to:
 - Certify if there is a good environment for pull a new image, by cleaning the dangling images;
@@ -104,7 +99,7 @@ The another instance, named nginx, expose the 80 http port to the public, as exa
 
 ## DNS
 
-###ClouDNS
+### ClouDNS
 
 The DNS server name chosen was the [ClouDNS](https://www.cloudns.net/ "ClouDNS") . It provides a free DNS to use a Type A and point it name to a external IP provided from AWS.
 
