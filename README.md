@@ -46,7 +46,7 @@ After build the image and pull to dockerhub, the next stage is to test the docke
 
 ![](https://i.ibb.co/pdZhfkx/Dockerhub-Snyk-Feature.jpg)
 
-##### Synk results example:
+##### Snyk results example:
 
 
 ```
